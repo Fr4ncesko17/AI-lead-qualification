@@ -60,48 +60,18 @@ Lead:
         for key in required_keys:
             if key not in parsed:
                 raise ValueError(f"Missing key: {key}")
-            
-        # Validaciones de tipo
+
         if not isinstance(parsed["score"], (int, float)):
             raise ValueError("Score must be a number")
 
-        if not isinstance(parsed["classification"], str):
-            raise ValueError("Classification must be string")
-
-        if not isinstance(parsed["action"], str):
-            raise ValueError("Action must be string")
-
-        if not isinstance(parsed["reason"], str):
-            raise ValueError("Reason must be string")
-        
-        # NORMALIZACION
         parsed["classification"] = parsed["classification"].capitalize()
         parsed["action"] = parsed["action"].capitalize()
 
         return parsed
 
     except Exception as e:
-        print("⚠️ Error parsing response:")
-        print(raw_text)
-        print(e)
-
         return {
             "error": "Invalid response from model",
-            "raw_response": raw_text
+            "raw_response": raw_text,
+            "details": str(e)
         }
-
-
-# TEST
-if __name__ == "__main__":
-    lead = {
-        "name": "Juan Perez",
-        "company": "TechCorp",
-        "role": "CTO",
-        "company_size": 80,
-        "need": "Implementar soluciones de ciberseguridad",
-        "budget": "alto",
-        "urgency": "alta"
-    }
-
-    result = evaluate_lead(lead)
-    print(json.dumps(result, indent=2, ensure_ascii=False))
